@@ -1,2 +1,1 @@
-# cppmulti
-C++17 multi-dimensional utilities
+A library is a C++17 library that provides multi-dimensional utilities.
