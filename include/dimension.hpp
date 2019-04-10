@@ -1,0 +1,77 @@
+/**
+ * @file dimension.hpp
+ * Provides multi-dimensional size support.
+ */
+
+#ifndef INC_LF_MULTI_DIMENSION_HPP_T1COCZBICK
+#define INC_LF_MULTI_DIMENSION_HPP_T1COCZBICK
+
+#include <array>
+#include <cstddef>
+
+#include "common.hpp"
+
+namespace LF_lib {
+  namespace multi {
+
+    /**
+     * Multi-dimensional size type.
+     *
+     * Literal aggregate type.
+     * Default-constructs to all zero.
+     *
+     * @tparam N The number of dimensions. Can be zero.
+     */
+    template <std::size_t N>
+    struct Dimension {
+      /**
+       * Stores the @c N extents.
+       */
+      std::array<std::size_t, N> extents{};
+
+      /**
+       * Calculates the total size.
+       *
+       * @pre    The total size is representable by \c std::size_t.
+       * @post   The result is equal to <code>extents[0] * extents[1] * ... * extents[N-1]</code>.
+       * @return The total size.
+       */
+      constexpr std::size_t size() const
+      {
+	std::size_t result = 1;
+	for (std::size_t i = 0; i < N; ++i)
+	  result *= extents[i];
+	return result;
+      }
+
+      /**
+       * Converts a multi-dimensional index to a single index.
+       *
+       * @param indices The indices on each dimension.
+       *
+       * @pre    Each index is less than or equal to the corresponding
+       *         dimension.
+       * @post   The result is equal to
+       *         @f[ \sum_{i = 0}^{N - 1} \Biggl(
+       *             c_i \prod_{j = i + 1}^{N - 1} d_j
+       *          \Biggr), @f]
+       *         where @f$ N @f$ is \c N,
+       *         @f$ d_i @f$ is the @f$i@f$th dimension,
+       *         and @f$ c_i @f$ is the @f$i@f$th index.
+       * @return The multi-dimensional index converted to a single index.
+       */
+      constexpr std::size_t index(const std::array<std::size_t, N>& indices) const
+      {
+	std::size_t result = 0;
+	for (std::size_t i = 0; i < N; ++i) {
+	  result *= extents[i];
+	  result += indices[i];
+	}
+	return result;
+      }
+    };
+  
+  }
+}
+
+#endif
