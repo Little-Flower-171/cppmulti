@@ -8,6 +8,7 @@
 
 #include <array>
 #include <cstddef>
+#include <stdexcept>
 
 #include "common.hpp"
 
@@ -36,7 +37,7 @@ namespace LF_lib {
        * @post   The result is equal to <code>extents[0] * extents[1] * ... * extents[N-1]</code>.
        * @return The total size.
        */
-      constexpr std::size_t size() const
+      constexpr std::size_t size() const noexcept
       {
 	std::size_t result = 1;
 	for (std::size_t i = 0; i < N; ++i)
@@ -47,7 +48,9 @@ namespace LF_lib {
       /**
        * Converts a multi-dimensional index to a single index.
        *
-       * @param indices The indices on each dimension.
+       * @param  indices  The indices on each dimension.
+       *
+       * @throw  std::out_of_range  Some of the indices are out of range.
        *
        * @pre    Each index is less than or equal to the corresponding
        *         dimension.
@@ -64,6 +67,8 @@ namespace LF_lib {
       {
 	std::size_t result = 0;
 	for (std::size_t i = 0; i < N; ++i) {
+	  if (indices[i] >= extents[i])
+	    throw std::out_of_range{"LF_lib::multi::Dimension<N>::index out of range"};
 	  result *= extents[i];
 	  result += indices[i];
 	}
