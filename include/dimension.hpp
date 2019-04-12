@@ -55,12 +55,7 @@ namespace LF_lib {
        * @pre    Each index is less than or equal to the corresponding
        *         dimension.
        * @post   The result is equal to
-       *         @f[ \sum_{i = 0}^{N - 1} \Biggl(
-       *             c_i \prod_{j = i + 1}^{N - 1} d_j
-       *          \Biggr), @f]
-       *         where @f$ N @f$ is \c N,
-       *         @f$ d_i @f$ is the @f$i@f$th dimension,
-       *         and @f$ c_i @f$ is the @f$i@f$th index.
+       *         <code>indices[0] * extents[1] * extents[2] * ... * extents[N-1] + indices[1] * extents[2] * ... * extents[N-1] + ... + indices[N-2] * extents[N-1] + indices[N-1]</code>.
        * @return The multi-dimensional index converted to a single index.
        */
       constexpr std::size_t index(const std::array<std::size_t, N>& indices) const
